@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>yongfeng&#39;s blog</title>
-    <link>http://fanyongfeng.github.io/</link>
+    <link>https://fanyongfeng.github.io/</link>
     <description>Recent content on yongfeng&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 23 Nov 2016 13:45:25 +0800</lastBuildDate>
-    <atom:link href="http://fanyongfeng.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://fanyongfeng.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>ES6 promise</title>
-      <link>http://fanyongfeng.github.io/post/good-to-great/</link>
+      <link>https://fanyongfeng.github.io/post/good-to-great/</link>
       <pubDate>Wed, 23 Nov 2016 13:45:25 +0800</pubDate>
       
-      <guid>http://fanyongfeng.github.io/post/good-to-great/</guid>
+      <guid>https://fanyongfeng.github.io/post/good-to-great/</guid>
       <description>
 
 &lt;h2 id=&#34;promise的含义-br&#34;&gt;&lt;strong&gt;Promise的含义&lt;/strong&gt;&lt;br&gt;&lt;/h2&gt;

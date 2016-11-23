@@ -8,24 +8,24 @@
         <meta name="description" content="The awesome blog of yongfeng fan.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="generator" content="Hugo 0.16" />
-          <link href="https://fanyongfeng.github.io/post/index.xml" rel="alternate" type="application/rss+xml" title="yongfeng&#39;s blog" />
-          <link href="https://fanyongfeng.github.io/post/index.xml" rel="feed" type="application/rss+xml" title="yongfeng&#39;s blog" />
+          <link href="http://fanyongfeng.github.io/post/index.xml" rel="alternate" type="application/rss+xml" title="yongfeng&#39;s blog" />
+          <link href="http://fanyongfeng.github.io/post/index.xml" rel="feed" type="application/rss+xml" title="yongfeng&#39;s blog" />
         <link href='//fonts.googleapis.com/css?family=Roboto:400,300,700|Noto+Serif:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="https://fanyongfeng.github.io/css/styles.css">
-        <link rel="icon" href="https://fanyongfeng.github.io/favicon.ico">
-        <link rel="apple-touch-icon" href="https://fanyongfeng.github.io/apple-touch-icon.png" />
-        <link rel="stylesheet" href="https://fanyongfeng.github.io/css/highlightjs/monokai.css">
-        <script src="https://fanyongfeng.github.io/js/vendor/modernizr-2.8.0.min.js"></script>
+        <link rel="stylesheet" href="http://fanyongfeng.github.io/css/styles.css">
+        <link rel="icon" href="http://fanyongfeng.github.io/favicon.ico">
+        <link rel="apple-touch-icon" href="http://fanyongfeng.github.io/apple-touch-icon.png" />
+        <link rel="stylesheet" href="http://fanyongfeng.github.io/css/highlightjs/monokai.css">
+        <script src="http://fanyongfeng.github.io/js/vendor/modernizr-2.8.0.min.js"></script>
         <style>
         .site-header h2 .logo {
-        background: url(https://fanyongfeng.github.io/img/author.jpg) no-repeat 0 0;
+        background: url(http://fanyongfeng.github.io/img/author.jpg) no-repeat 0 0;
         }
         @media (min--moz-device-pixel-ratio: 1.3), (-o-min-device-pixel-ratio: 2.6 / 2), (-webkit-min-device-pixel-ratio: 1.3), (min-device-pixel-ratio: 1.3), (min-resolution: 1.3dppx) {
           .site-header h2 .logo {
-            background-image: url(https://fanyongfeng.github.io/img/author.jpg);
+            background-image: url(http://fanyongfeng.github.io/img/author.jpg);
         }}
        .site-header {
-         background: #2a373d url(https://fanyongfeng.github.io/img/author.jpg) no-repeat center center;
+         background: #2a373d url(http://fanyongfeng.github.io/img/author.jpg) no-repeat center center;
          z-index: -1;
         }
         </style>
@@ -42,9 +42,9 @@
 <div class="container clearfix">
     <main role="main" class="content">
         <article class="post">
-            <a class="btn home" href="https://fanyongfeng.github.io/" title="">&laquo; </a>
+            <a class="btn home" href="http://fanyongfeng.github.io/" title="">&laquo; </a>
             
-<h1><a href="https://fanyongfeng.github.io/post/good-to-great/" title="good to great">good to great</a></h1>
+<h1><a href="http://fanyongfeng.github.io/post/good-to-great/" title="ES6 promise">ES6 promise</a></h1>
 
 <footer class="post-info"> <span class="post-meta"><time datetime="2016.11.23">2016.11.23</time>
 
@@ -53,21 +53,137 @@
 </span>
 </footer>
 
-            <p>I read <strong>Good to Great in January 2016</strong>. An awesome read sharing detailed analysis on how good companies became great.</p>
+            
+
+<h2 id="promise的含义-br"><strong>Promise的含义</strong><br></h2>
+
+<p>promise可以理解为一个容器即是一个对象，里面保存着未来才会结束的一个异步操作的结果。</p>
+
+<p><p>promise有三种状态：</p>
+<strong>1.pending</strong>表示进行中；
+<strong>2.resolved</strong>表示已完成；
+<strong>3.rejected</strong>表示已失败；<br>
+一旦promise 的状态发生改变，之后就不会再变，会一直保持这个结果.</p>
+
+<h2 id="promise的写法-br"><strong>Promise的写法</strong><br></h2>
+
+<pre>
+    <code>
+        var promise = new Promise(function(resolve, reject) {
+            if (异步成功) {
+                resolve();
+            } else {
+                reject();
+            }
+        });
+    </code>
+</pre>
+resolve和reject是俩个函数，new  promise的时候并不需要你把这两个函数传进去，js引擎会帮我们做这件事，resolve函数的作用是在promise状态从pending改为resolved的时候调用，reject则是promise状态从pending改为rejected的时候调用。
+我们可以对new 出来的promise实例进行操作，使用then方法为实例指定resolve和reject函数。这里需要注意的是then方法会等同步脚本执行完毕之后才会执行，比如下面这个例子
+<pre>
+    <code>
+    let promise = new Promise(function(resolve, reject) {
+      console.log('Promise');
+      resolve();
+    });
+
+    promise.then(function() {
+      console.log('Resolved.');
+    });
+
+    console.log('Hi!');
+
+    // Promise
+    // Hi!
+    // Resolved
+    </code>
+</pre>
+
+<p>我们可以使用promise实现ajax，看下面这个例子
+<pre>
+    <code>
+        var getJSON = function(option) {
+            var promise = new Promise(resolve, reject) {
+                var client = new XMLHttpRequest();
+                client.open(&lsquo;get&rsquo;, option.url + &lsquo;?&rsquo; + encodeURIComponent(option.data));
+                client.responseType = option.type;
+                client.setRequestHeader(&lsquo;Accept&rsquo;, &lsquo;application/json&rsquo;);
+                client.onreadystatechange = handler;
+                function handler() {
+              if (this.readyState !== 4) {
+                return;
+              }
+              if (this.status === 200) {
+                resolve(this.response);
+              } else {
+                reject(new Error(this.statusText));
+              }
+                }
+            return promise;
+        };
+</code>
+<code>
+        getJSON(&ldquo;/posts.json&rdquo;).then(function(json) {
+          console.log(&lsquo;Contents: &lsquo; + json);
+        }, function(error) {
+          console.error(&lsquo;出错了&rsquo;, error);
+        });
+    </code>
+</pre></p>
+
+<p><strong>还需要注意的是</strong>then方法返回的是一个新的promise实例，因为then方法之后需要链式操作。</p>
+
+<h2 id="promise-prototype-catch">Promise.prototype.catch()</h2>
+
+<p>catch方法用于捕获当peomise实例状态变为reject，这时候执行catch方法指定的function，它返回的也是一个peomise实例，还可以接着链式操作。
+Promise对象的错误具有“冒泡”性质，会一直向后传递，直到被捕获为止。也就是说，错误总是会被下一个catch语句捕获。</p>
+
+<p><pre>
+    <code>
+        getJSON(&ldquo;/post/1.json&rdquo;).then(function(post) {
+          return getJSON(post.commentURL);
+        }).then(function(comments) {
+          // some code
+        }).catch(function(error) {
+          // 处理前面三个Promise产生的错误
+        });
+    </code>
+</pre>
+跟传统的try/catch代码块不同的是，如果没有使用catch方法指定错误处理的回调函数，Promise对象抛出的错误不会传递到外层代码，即不会有任何反应。
+<pre>
+    <code>
+        var promise = new Promise(function(resolve, reject) {
+          resolve(&ldquo;ok&rdquo;);
+          setTimeout(function() { throw new Error(&lsquo;test&rsquo;) }, 0)
+        });
+        promise.then(function(value) { console.log(value) });
+        // ok
+        // Uncaught Error: test
+    </code>
+</pre>
+上面代码中，Promise指定在下一轮“事件循环”再抛出错误，结果由于没有指定使用try&hellip;catch语句，就冒泡到最外层，成了未捕获的错误。因为此时，Promise的函数体已经运行结束了，所以这个错误是在Promise函数体外抛出的。</p>
+
+<h2 id="promise-all-promise-race">Promise.all() || Promise.race()</h2>
+
+<p>Promise.all()和Promise.race()都接受一个参数为每一项都可以是promise对象的数组，只不过all方法会在所有数组厘米promise resolve之后对本身状态改变边resolve的，race方法则是只要数组中的一项resolve自己本身就改变状态为resolved。</p>
+
+<h2 id="promise-resolve">Promise.resolve()</h2>
+
+<p>这个方法可以将参数转换为一个新的promise对象</p>
 
             <ul class="share-buttons">
     <li></li>
     <li>
-        <a class="icon-facebook-squared" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2ffanyongfeng.github.io%2fpost%2fgood-to-great%2f" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;" title=""></a>
+        <a class="icon-facebook-squared" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2ffanyongfeng.github.io%2fpost%2fgood-to-great%2f" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;" title=""></a>
     </li>
     <li>
-        <a class="icon-twitter" href="https://twitter.com/share?text=good%20to%20great&amp;url=https%3a%2f%2ffanyongfeng.github.io%2fpost%2fgood-to-great%2f" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;" title=""></a>
+        <a class="icon-twitter" href="https://twitter.com/share?text=ES6%20promise&amp;url=http%3a%2f%2ffanyongfeng.github.io%2fpost%2fgood-to-great%2f" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;" title=""></a>
     </li>
     <li>
-        <a class="icon-gplus" href="https://plus.google.com/share?url=https%3a%2f%2ffanyongfeng.github.io%2fpost%2fgood-to-great%2f" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;" title=""></a>
+        <a class="icon-gplus" href="https://plus.google.com/share?url=http%3a%2f%2ffanyongfeng.github.io%2fpost%2fgood-to-great%2f" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;" title=""></a>
     </li>
     <li>
-        <a class="icon-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2ffanyongfeng.github.io%2fpost%2fgood-to-great%2f&title=good%20to%20great" onclick="window.open(this.href, 'linkedin-share', 'width=600,height=494');return false;" title=""></a>
+        <a class="icon-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=http%3a%2f%2ffanyongfeng.github.io%2fpost%2fgood-to-great%2f&title=ES6%20promise" onclick="window.open(this.href, 'linkedin-share', 'width=600,height=494');return false;" title=""></a>
     </li>
 </ul>
 
@@ -77,9 +193,9 @@
             <div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'fanyongfeng';
-    var disqus_identifier = 'https:\/\/fanyongfeng.github.io\/post\/good-to-great\/';
-    var disqus_title = 'good to great';
-    var disqus_url = 'https:\/\/fanyongfeng.github.io\/post\/good-to-great\/';
+    var disqus_identifier = 'http:\/\/fanyongfeng.github.io\/post\/good-to-great\/';
+    var disqus_title = 'ES6 promise';
+    var disqus_url = 'http:\/\/fanyongfeng.github.io\/post\/good-to-great\/';
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -92,7 +208,7 @@
         </div>
     </main>
     <aside class="author">
-  <img class="profile-image" src="https://fanyongfeng.github.io/img/fan.jpg" alt="YONGFENG FAN" />
+  <img class="profile-image" src="http://fanyongfeng.github.io/img/fan.jpg" alt="YONGFENG FAN" />
   <p class="name"> 
   <strong>YONGFENG FAN</strong></p>
   <p class="address">shanghai</p>
@@ -120,7 +236,7 @@
 
 
 
-<li><a href="https://fanyongfeng.github.io/post/index.xml" class="icon-rss" target="_blank" title="RSS"></a></li>
+<li><a href="http://fanyongfeng.github.io/post/index.xml" class="icon-rss" target="_blank" title="RSS"></a></li>
 
   </ul>
   <br><br>
@@ -130,15 +246,15 @@
 
 <footer class="main-footer">
   <div class="container clearfix">
-        <a class="icon-rss" href="https://fanyongfeng.github.io/post/index.xml" title="RSS"></a>
+        <a class="icon-rss" href="http://fanyongfeng.github.io/post/index.xml" title="RSS"></a>
         <p>&copy; 2016 &middot; Powered by <a href="http://gohugo.io">Hugo</a>.</p>
   </div>
 </footer>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-<script>window.jQuery || document.write('<script src="https:\/\/fanyongfeng.github.io\/js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
-<script src="https://fanyongfeng.github.io/js/plugins.js"></script>
+<script>window.jQuery || document.write('<script src="http:\/\/fanyongfeng.github.io\/js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+<script src="http://fanyongfeng.github.io/js/plugins.js"></script>
 
 </body>
 </html>

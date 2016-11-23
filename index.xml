@@ -2,20 +2,136 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>yongfeng&#39;s blog</title>
-    <link>https://fanyongfeng.github.io/</link>
+    <link>http://fanyongfeng.github.io/</link>
     <description>Recent content on yongfeng&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 23 Nov 2016 13:45:25 +0800</lastBuildDate>
-    <atom:link href="https://fanyongfeng.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://fanyongfeng.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>good to great</title>
-      <link>https://fanyongfeng.github.io/post/good-to-great/</link>
+      <title>ES6 promise</title>
+      <link>http://fanyongfeng.github.io/post/good-to-great/</link>
       <pubDate>Wed, 23 Nov 2016 13:45:25 +0800</pubDate>
       
-      <guid>https://fanyongfeng.github.io/post/good-to-great/</guid>
-      <description>&lt;p&gt;I read &lt;strong&gt;Good to Great in January 2016&lt;/strong&gt;. An awesome read sharing detailed analysis on how good companies became great.&lt;/p&gt;
+      <guid>http://fanyongfeng.github.io/post/good-to-great/</guid>
+      <description>
+
+&lt;h2 id=&#34;promise的含义-br&#34;&gt;&lt;strong&gt;Promise的含义&lt;/strong&gt;&lt;br&gt;&lt;/h2&gt;
+
+&lt;p&gt;promise可以理解为一个容器即是一个对象，里面保存着未来才会结束的一个异步操作的结果。&lt;/p&gt;
+
+&lt;p&gt;&lt;p&gt;promise有三种状态：&lt;/p&gt;
+&lt;strong&gt;1.pending&lt;/strong&gt;表示进行中；
+&lt;strong&gt;2.resolved&lt;/strong&gt;表示已完成；
+&lt;strong&gt;3.rejected&lt;/strong&gt;表示已失败；&lt;br&gt;
+一旦promise 的状态发生改变，之后就不会再变，会一直保持这个结果.&lt;/p&gt;
+
+&lt;h2 id=&#34;promise的写法-br&#34;&gt;&lt;strong&gt;Promise的写法&lt;/strong&gt;&lt;br&gt;&lt;/h2&gt;
+
+&lt;pre&gt;
+    &lt;code&gt;
+        var promise = new Promise(function(resolve, reject) {
+            if (异步成功) {
+                resolve();
+            } else {
+                reject();
+            }
+        });
+    &lt;/code&gt;
+&lt;/pre&gt;
+resolve和reject是俩个函数，new  promise的时候并不需要你把这两个函数传进去，js引擎会帮我们做这件事，resolve函数的作用是在promise状态从pending改为resolved的时候调用，reject则是promise状态从pending改为rejected的时候调用。
+我们可以对new 出来的promise实例进行操作，使用then方法为实例指定resolve和reject函数。这里需要注意的是then方法会等同步脚本执行完毕之后才会执行，比如下面这个例子
+&lt;pre&gt;
+    &lt;code&gt;
+    let promise = new Promise(function(resolve, reject) {
+      console.log(&#39;Promise&#39;);
+      resolve();
+    });
+
+    promise.then(function() {
+      console.log(&#39;Resolved.&#39;);
+    });
+
+    console.log(&#39;Hi!&#39;);
+
+    // Promise
+    // Hi!
+    // Resolved
+    &lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;我们可以使用promise实现ajax，看下面这个例子
+&lt;pre&gt;
+    &lt;code&gt;
+        var getJSON = function(option) {
+            var promise = new Promise(resolve, reject) {
+                var client = new XMLHttpRequest();
+                client.open(&amp;lsquo;get&amp;rsquo;, option.url + &amp;lsquo;?&amp;rsquo; + encodeURIComponent(option.data));
+                client.responseType = option.type;
+                client.setRequestHeader(&amp;lsquo;Accept&amp;rsquo;, &amp;lsquo;application/json&amp;rsquo;);
+                client.onreadystatechange = handler;
+                function handler() {
+              if (this.readyState !== 4) {
+                return;
+              }
+              if (this.status === 200) {
+                resolve(this.response);
+              } else {
+                reject(new Error(this.statusText));
+              }
+                }
+            return promise;
+        };
+&lt;/code&gt;
+&lt;code&gt;
+        getJSON(&amp;ldquo;/posts.json&amp;rdquo;).then(function(json) {
+          console.log(&amp;lsquo;Contents: &amp;lsquo; + json);
+        }, function(error) {
+          console.error(&amp;lsquo;出错了&amp;rsquo;, error);
+        });
+    &lt;/code&gt;
+&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;还需要注意的是&lt;/strong&gt;then方法返回的是一个新的promise实例，因为then方法之后需要链式操作。&lt;/p&gt;
+
+&lt;h2 id=&#34;promise-prototype-catch&#34;&gt;Promise.prototype.catch()&lt;/h2&gt;
+
+&lt;p&gt;catch方法用于捕获当peomise实例状态变为reject，这时候执行catch方法指定的function，它返回的也是一个peomise实例，还可以接着链式操作。
+Promise对象的错误具有“冒泡”性质，会一直向后传递，直到被捕获为止。也就是说，错误总是会被下一个catch语句捕获。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;
+    &lt;code&gt;
+        getJSON(&amp;ldquo;/post/1.json&amp;rdquo;).then(function(post) {
+          return getJSON(post.commentURL);
+        }).then(function(comments) {
+          // some code
+        }).catch(function(error) {
+          // 处理前面三个Promise产生的错误
+        });
+    &lt;/code&gt;
+&lt;/pre&gt;
+跟传统的try/catch代码块不同的是，如果没有使用catch方法指定错误处理的回调函数，Promise对象抛出的错误不会传递到外层代码，即不会有任何反应。
+&lt;pre&gt;
+    &lt;code&gt;
+        var promise = new Promise(function(resolve, reject) {
+          resolve(&amp;ldquo;ok&amp;rdquo;);
+          setTimeout(function() { throw new Error(&amp;lsquo;test&amp;rsquo;) }, 0)
+        });
+        promise.then(function(value) { console.log(value) });
+        // ok
+        // Uncaught Error: test
+    &lt;/code&gt;
+&lt;/pre&gt;
+上面代码中，Promise指定在下一轮“事件循环”再抛出错误，结果由于没有指定使用try&amp;hellip;catch语句，就冒泡到最外层，成了未捕获的错误。因为此时，Promise的函数体已经运行结束了，所以这个错误是在Promise函数体外抛出的。&lt;/p&gt;
+
+&lt;h2 id=&#34;promise-all-promise-race&#34;&gt;Promise.all() || Promise.race()&lt;/h2&gt;
+
+&lt;p&gt;Promise.all()和Promise.race()都接受一个参数为每一项都可以是promise对象的数组，只不过all方法会在所有数组厘米promise resolve之后对本身状态改变边resolve的，race方法则是只要数组中的一项resolve自己本身就改变状态为resolved。&lt;/p&gt;
+
+&lt;h2 id=&#34;promise-resolve&#34;&gt;Promise.resolve()&lt;/h2&gt;
+
+&lt;p&gt;这个方法可以将参数转换为一个新的promise对象&lt;/p&gt;
 </description>
     </item>
     

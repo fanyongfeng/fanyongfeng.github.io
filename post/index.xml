@@ -6,8 +6,92 @@
     <description>Recent content in Posts on yongfeng&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 23 Nov 2016 13:45:25 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 25 Nov 2016 19:46:14 +0800</lastBuildDate>
     <atom:link href="https://fanyongfeng.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>the different between transform transition animation</title>
+      <link>https://fanyongfeng.github.io/post/the-different-between-transform-transition-animation/</link>
+      <pubDate>Fri, 25 Nov 2016 19:46:14 +0800</pubDate>
+      
+      <guid>https://fanyongfeng.github.io/post/the-different-between-transform-transition-animation/</guid>
+      <description>
+
+&lt;h2 id=&#34;css-transform-transition-animation-属性的区别&#34;&gt;CSS Transform / Transition / Animation 属性的区别&lt;/h2&gt;
+
+&lt;p&gt;前几天有人问起了我什么时候用Transition，什么时候用animation。一瞬间我突然发现我之前还真没有注意过这个，让我说一时间说起他们的应用场景，我还真总结不好，所以闲下来我就去搜索看了一看&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Transform&lt;/strong&gt;&lt;br&gt;
+在部分的test case当中，每每演示transform属性的，看起来好像都是带动画。这使得小部分直觉化思维的人（包括我）认为transform属性是动画属性。而恰恰相反，transform属性是静态属性，一旦写到style里面，将会直接显示作用，无任何变化过程。transform的主要用途是用来做元素的特殊变形，对于做设计的人来说并不是很陌生，简单的来说就是css 的图形变形工具。&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;关于图形变形的基础条件当中的原点设定，在css里面使用的是transform-origin来定义的。这个定义的原点应该是该css作用的元素的左上角为0,0来计算的（有待研究）。其他的属性则根据这个属性来计算进行计算。&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;关于图形变化的模式，css3标准当中transform-style来定义。默认是flat，展现出来的是简单的效果。而preserve-3d则将空间呈现为3d模式。从正常的思维来说，应该只需要preserve-3d就好了，但是从谣传“开启了perserve-3d就使用了GPU加速”来说，这个属性可能是为了降低系统消耗用的，毕竟3d比2d要多一个维度的计算。&lt;/p&gt;
+
+&lt;p&gt;如果需要使用3d模式，必须先指定style为3d，并在任意父元素上增加 perspective 及 perspective-origin 来指定透视点。&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;具体的给设计师改变元素样式用的属性则有以下4个：&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1.translate3d(x,y,z) 是用来控制元素的位置在页面上的三轴的位置的；&lt;/strong&gt;&lt;br&gt;
+&lt;strong&gt;2.rotate(deg)是用来控制元素旋转角度的；&lt;/strong&gt;&lt;br&gt;
+&lt;strong&gt;3.skew[x,y](deg) 这个属性是用来制作倾斜度的，做过设计的人可能会知道，这个是用来在2d里面创建3d透视图的时候必须的属性；&lt;/strong&gt;&lt;br&gt;
+&lt;strong&gt;4.scale3d(x,y,z) 用来放大缩小效果，属性是比值；&lt;/strong&gt;&lt;br&gt;
+总体看来 css transform的属性和原来使用的left ，right ，top， bottom 的属性从动静角度来说没有任何区别，因此使用的时候应该将transform归类到这类定位变形的静态属性里面。&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Transition&lt;/strong&gt;&lt;br&gt;
+transition属性是一个简单的动画属性，非常简单非常容易用。可以说它是animation的简化版本，是给普通做简单网页特效用的。比如你有如下两个样式：&lt;br&gt;
+&lt;pre&gt;
+    &lt;code&gt;
+        .position{
+            left:100px;
+            top:100px;
+        }
+        .animate{
+            -webkit-transition:left 0.5s ease-out;
+            left:500px;
+            top:500px;
+        }
+    &lt;/code&gt;
+&lt;/pre&gt;
+其中animate的transition的属性的意思说：当你的left属性发生变化的时候，执行动画效果（仅仅基于left的属性变化，其他的属性不会加入到动画变化里面去）；&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;首先你的元素的css为position。当你将其cssList 增加 animate 或者替换position 为animate的时候，元素的属性变化，触发webkit-transition，以指定属性变化前的值为起始值，变化后的属性为结束值，执行动画效果。这是一个简单的两点变化过程，大大简化了animation属性的复杂程度。&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;同时，如果在transition的动画当中，属性值有了新的变化，则会中断当前的动画执行，并将中断时的属性值提供给新的动画作为起始值来计算新的动画效果。&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;我在css编写的时候，因为变化的属性只有transform一个，因此在transtion属性里面指定响应属性为all，可以响应并执行元素所有属性的变化动画（能做动画的属性）。&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Animation&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在官方的Introduction上介绍这个属性是transition属性的扩展。但是这个简单的介绍里面包含了不简单的东西：keyframes。&lt;/p&gt;
+
+&lt;p&gt;做过Flash动画的人都会知道，Flash里面有两个基础武器：时间轴和关键帧。而css keyframes的出现，则是提供了flash世界里面的这两个属性的合集。看一个简单的 keyframes 的示例：&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;
+    &lt;code&gt;
+        @keyframes &amp;lsquo;wobble&amp;rsquo;{
+          0%{
+           left:100px
+        }
+           30%{
+           left:300px;
+        }
+          100%{
+           left:500px;
+        }
+        }
+        .animate{
+            left:100px;
+           -webkit-animation:wobble 0.5s ease-out;
+           -webkit-animation-fill-mode:backwards;
+        }
+    &lt;/code&gt;
+&lt;/pre&gt;
+上面这个代码展示了一个keyframes &amp;lsquo;wobble&amp;rsquo;，其中 0％ 代表在变化中不同时间点的属性值，你可以较精确的控制动画变化中任何一个时间点的属性效果。而animation则根据这个keyframes提供的属性变化方式去计算元素动画当中的属性。与 transition 不同的是，keyframes提供更多的控制，尤其是时间轴的控制，这点让css animation更加强大，使得flash的部分动画效果可以由css直接控制完成，而这一切，仅仅只需要几行代码，也因此诞生了大量（比起flash来说算是大量了）基于css的animation tools，用来取代flash的动画部分。关于动画工具，可以参考Web standards-based Animation Tools.&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;另外在animation属性里面还有一个最重要的就是：animation-fill-mode，这个属性标示是以(from/0%)指定的样式 还是以(to/100%)指定的样式为动画完成之后的样式。这个很方便我们控制动画的结尾样式，保证动画的整体连贯。&lt;br&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>ES6 promise</title>
